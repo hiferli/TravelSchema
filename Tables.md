@@ -153,3 +153,36 @@ CREATE TABLE IF NOT EXISTS Packages
 - **Quantity**: An integer that stores the quantity available for the package. The default value is 1.
 - **SupplierStatus**: An enum that indicates whether the package is 'Active' or 'Inactive'. The default value is 'Active'.
 - **AdminStatus**: An enum that indicates whether the package is 'Approved' or 'Pending'. The default value is 'Pending'.
+
+### Bookings Table
+
+The `Bookings` table stores information about bookings made by users for different packages.
+
+#### Schema Definition
+
+```sql
+CREATE TABLE IF NOT EXISTS Bookings
+(
+    BookingId INT AUTO_INCREMENT NOT NULL PRIMARY KEY UNIQUE,
+    UserId INT NOT NULL,
+    PackageId INT NOT NULL,
+    JourneyStartDatetime DATETIME NOT NULL,
+    SupplierStatus ENUM('Confirmed', 'Under Process') DEFAULT 'Under Process',
+    
+    FOREIGN KEY (UserId) REFERENCES Users(UserId),
+    FOREIGN KEY (PackageId) REFERENCES Packages(PackageId)
+);
+```
+
+#### Columns
+
+- **BookingId**: An integer that uniquely identifies each booking. It is the primary key and is auto-incremented.
+- **UserId**: An integer that references the `UserId` from the `Users` table.
+- **PackageId**: An integer that references the `PackageId` from the `Packages` table.
+- **JourneyStartDatetime**: A datetime field that stores the start date and time of the journey.
+- **SupplierStatus**: An enum that indicates the status of the booking from the supplier's perspective. Possible values are 'Confirmed' and 'Under Process'. The default value is 'Under Process'.
+
+#### Notes
+
+- The `JourneyStartDatetime` field is required and cannot be null.
+- The `SupplierStatus` field is set to 'Under Process' by default, indicating that the booking is being processed until confirmed.
